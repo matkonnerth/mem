@@ -1,20 +1,27 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- *    Copyright 2020 (c) Matthias Konnerth
- */
+#include <Mem_BlockAllocator.h>
 
-#ifndef BLOCKALLOCATOR_H
-#define BLOCKALLOCATOR_H
-#include <stddef.h>
-
-struct BlockAllocator;
-typedef struct BlockAllocator BlockAllocator;
-
-BlockAllocator *BlockAllocator_new(size_t defaultBlockSize);
-char *BlockAllocator_malloc(struct BlockAllocator *allocator, size_t size);
-char *BlockAllocator_realloc(struct BlockAllocator *allocator, size_t size);
-void BlockAllocator_delete(struct BlockAllocator *allocator);
-
-#endif
+namespace mem
+{
+class BlockAllocator
+{
+public:
+    BlockAllocator(size_t defaultBlockSize = 1024) {
+        m_allocator = Mem_BlockAllocator_new(defaultBlockSize);
+    }
+    ~BlockAllocator()
+    {
+        Mem_BlockAllocator_delete(m_allocator);
+        m_allocator = nullptr;
+    }
+    void* alloc(size_t size)
+    {
+        return Mem_BlockAllocator_malloc(m_allocator, size);
+    }
+    void* realloc(size_t size)
+    {
+        return Mem_BlockAllocator_realloc(m_allocator, size);
+    }
+private:
+    Mem_BlockAllocator* m_allocator{nullptr};
+};
+} // namespace mem
