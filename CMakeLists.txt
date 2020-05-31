@@ -38,12 +38,13 @@ set(C_COMPILE_DEFS -std=c99 -pipe -Wall -Wextra -Wpedantic -Werror
                     -fexceptions
                     -Wswitch-enum)
 
-if(${ENABLE_ASAN})
-    set(${C_COMPILE_DEFS} -g -fsanitize=address -fsanitize=leak -fsanitize=undefined)
-endif()
-
 add_library(BlockAllocator SHARED
     src/BlockAllocator.c)
+target_compile_options(BlockAllocator PRIVATE ${C_COMPILE_DEFS})
 target_include_directories(BlockAllocator PUBLIC include)
+if(${ENABLE_ASAN})
+    target_link_libraries(BlockAllocator INTERFACE "-g -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-scope -fsanitize-coverage=trace-pc-guard,trace-cmp -fsanitize=leak -fsanitize=undefined")
+endif()
 
 add_subdirectory(tests)
+add_subdirectory(benchmarks)

@@ -1,0 +1,3 @@
+add_executable(benchAllocator benchmark.cpp)
+target_compile_features(benchAllocator PRIVATE cxx_std_17)
+target_link_libraries(benchAllocator PRIVATE CONAN_PKG::benchmark BlockAllocator)
