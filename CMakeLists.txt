@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(blockallocator)
+project(ArenaAllocator)
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -38,13 +38,14 @@ set(C_COMPILE_DEFS -std=c99 -pipe -Wall -Wextra -Wpedantic -Werror
                     -fexceptions
                     -Wswitch-enum)
 
-add_library(BlockAllocator SHARED
-    src/BlockAllocator.c)
-target_compile_options(BlockAllocator PRIVATE ${C_COMPILE_DEFS})
-target_include_directories(BlockAllocator PUBLIC include)
+add_library(ArenaAllocator SHARED
+    src/ArenaAllocator.c)
+target_compile_options(ArenaAllocator PRIVATE ${C_COMPILE_DEFS})
+target_include_directories(ArenaAllocator PUBLIC include)
 if(${ENABLE_ASAN})
-    target_link_libraries(BlockAllocator INTERFACE "-g -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-scope -fsanitize-coverage=trace-pc-guard,trace-cmp -fsanitize=leak -fsanitize=undefined")
+    target_link_libraries(ArenaAllocator INTERFACE "-g -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-scope -fsanitize-coverage=trace-pc-guard,trace-cmp -fsanitize=leak -fsanitize=undefined")
 endif()
 
 add_subdirectory(tests)
 add_subdirectory(benchmarks)
+add_subdirectory(examples)

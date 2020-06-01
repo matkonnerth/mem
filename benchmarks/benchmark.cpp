@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include <BlockAllocator.h>
+#include <ArenaAllocator.h>
 #include <string.h>
 
 void createObjects_Calloc(size_t size, size_t objSize)
@@ -15,7 +15,7 @@ void createObjects_Calloc(size_t size, size_t objSize)
 
 void createObjects_BlockAlloc(size_t size, size_t objSize)
 {
-    mem::BlockAllocator a(102400);
+    mem::ArenaAllocator a(102400);
     for (size_t cnt = 0; cnt < size; cnt++)
     {
         void *mem = a.alloc(objSize);
